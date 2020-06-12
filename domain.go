@@ -585,6 +585,7 @@ type DomainInterfaceDriverHost struct {
 	ECN      string `xml:"ecn,attr,omitempty"`
 	UFO      string `xml:"ufo,attr,omitempty"`
 	MrgRXBuf string `xml:"mrg_rxbuf,attr,omitempty"`
+	StandBy  string `xml:"standby,attr,omitempty"`
 }
 
 type DomainInterfaceDriverGuest struct {
@@ -1536,6 +1537,16 @@ type DomainMemorydev struct {
 	Address *DomainAddress         `xml:"address"`
 }
 
+type DomainVhostUser struct {
+	XMLName   xml.Name       `xml:"vhostuser"`
+	ID        string         `xml:"id,attr"`
+	Path      string         `xml:"path,attr"`
+	ReConnect uint           `xml:"reconnect,attr"`
+	Queues    uint           `xml:"queues,attr"`
+	BootIndex uint           `xml:"bootindex,attr,omitempty"`
+	Address   *DomainAddress `xml:"address"`
+}
+
 type DomainWatchdog struct {
 	XMLName xml.Name       `xml:"watchdog"`
 	Model   string         `xml:"model,attr"`
@@ -1686,6 +1697,7 @@ type DomainDeviceList struct {
 	Memorydevs   []DomainMemorydev   `xml:"memory"`
 	IOMMU        *DomainIOMMU        `xml:"iommu"`
 	VSock        *DomainVSock        `xml:"vsock"`
+	VhostUser    []DomainVhostUser   `xml:"vhostuser"`
 }
 
 type DomainMemory struct {
@@ -4799,6 +4811,18 @@ func (d *DomainWatchdog) Unmarshal(doc string) error {
 }
 
 func (d *DomainWatchdog) Marshal() (string, error) {
+	doc, err := xml.MarshalIndent(d, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(doc), nil
+}
+
+func (d *DomainVhostUser) Unmarshal(doc string) error {
+	return xml.Unmarshal([]byte(doc), d)
+}
+
+func (d *DomainVhostUser) Marshal() (string, error) {
 	doc, err := xml.MarshalIndent(d, "", "  ")
 	if err != nil {
 		return "", err

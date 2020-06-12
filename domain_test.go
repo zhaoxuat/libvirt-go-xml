@@ -1719,6 +1719,75 @@ var domainTestData = []struct {
 			Type: "kvm",
 			Name: "test",
 			Devices: &DomainDeviceList{
+				VhostUser: []DomainVhostUser{
+					DomainVhostUser{
+						ID:        "bsi-3455apkt",
+						Path:      "/var/tmp/bsi-3455apkt.sock",
+						ReConnect: 1,
+						Queues:    4,
+						Address: &DomainAddress{
+							PCI: &DomainAddressPCI{
+								Domain:   &videoAddr.Domain,
+								Bus:      &videoAddr.Bus,
+								Slot:     &videoAddr.Slot,
+								Function: &videoAddr.Function,
+							},
+						},
+					},
+				},
+			},
+		},
+		Expected: []string{
+			`<domain type="kvm">`,
+			`  <name>test</name>`,
+			`  <devices>`,
+			`    <vhostuser id="bsi-3455apkt" path="/var/tmp/bsi-3455apkt.sock" reconnect="1" queues="4">`,
+			`      <address type="pci" domain="0x0000" bus="0x00" slot="0x05" function="0x0"></address>`,
+			`    </vhostuser>`,
+			`  </devices>`,
+			`</domain>`,
+		},
+	},
+	{
+		Object: &Domain{
+			Type: "kvm",
+			Name: "test",
+			Devices: &DomainDeviceList{
+				VhostUser: []DomainVhostUser{
+					DomainVhostUser{
+						ID:        "bsi-3455apkt",
+						Path:      "/var/tmp/bsi-3455apkt.sock",
+						ReConnect: 1,
+						Queues:    4,
+						BootIndex: 1,
+						Address: &DomainAddress{
+							PCI: &DomainAddressPCI{
+								Domain:   &videoAddr.Domain,
+								Bus:      &videoAddr.Bus,
+								Slot:     &videoAddr.Slot,
+								Function: &videoAddr.Function,
+							},
+						},
+					},
+				},
+			},
+		},
+		Expected: []string{
+			`<domain type="kvm">`,
+			`  <name>test</name>`,
+			`  <devices>`,
+			`    <vhostuser id="bsi-3455apkt" path="/var/tmp/bsi-3455apkt.sock" reconnect="1" queues="4" bootindex="1">`,
+			`      <address type="pci" domain="0x0000" bus="0x00" slot="0x05" function="0x0"></address>`,
+			`    </vhostuser>`,
+			`  </devices>`,
+			`</domain>`,
+		},
+	},
+	{
+		Object: &Domain{
+			Type: "kvm",
+			Name: "test",
+			Devices: &DomainDeviceList{
 				Interfaces: []DomainInterface{
 					DomainInterface{
 						MAC: &DomainInterfaceMAC{
